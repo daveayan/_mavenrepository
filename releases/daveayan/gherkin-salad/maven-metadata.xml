@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>daveayan</groupId>
+  <artifactId>gherkin-salad</artifactId>
+  <versioning>
+    <versions>
+      <version>1.0-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20111219010129</lastUpdated>
+  </versioning>
+</metadata>
