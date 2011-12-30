@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>daveayan</groupId>
 	<artifactId>gherkin-salad</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<selenium.version>2.0b3</selenium.version>
+		<selenium.version>2.13.0</selenium.version>
 	</properties>
 
 	<profiles>
@@ -66,8 +66,75 @@
 	</profiles>
 
 	<build>
-		<finalName>atdd-studio</finalName>
+		<finalName>gherkin-salad</finalName>
 		<plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>compile</id>
+						<phase>compile</phase>
+						<configuration>
+							<tasks>
+								<mkdir dir="${basedir}/src/main/groovy" />
+								<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc">
+									<classpath refid="maven.compile.classpath" />
+								</taskdef>
+								<mkdir dir="${project.build.outputDirectory}" />
+								<groovyc destdir="${project.build.outputDirectory}"
+									srcdir="${basedir}/src/main/groovy/" listfiles="true">
+									<classpath refid="maven.compile.classpath" />
+								</groovyc>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>test-compile</id>
+						<phase>test-compile</phase>
+						<configuration>
+							<tasks>
+								<mkdir dir="${basedir}/src/test/groovy" />
+								<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc">
+									<classpath refid="maven.test.classpath" />
+								</taskdef>
+								<mkdir dir="${project.build.testOutputDirectory}" />
+								<groovyc destdir="${project.build.testOutputDirectory}"
+									srcdir="${basedir}/src/test/groovy/" listfiles="true">
+									<classpath refid="maven.test.classpath" />
+								</groovyc>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>apply-execution-plan</id>
+						<phase>integration-test</phase>
+						<configuration>
+							<tasks>
+								<taskdef name="groovy" classname="org.codehaus.groovy.ant.Groovy">
+									<classpath refid="maven.compile.classpath" />
+								</taskdef>
+								<groovy src="${basedir}/src/main/groovy/daveayan/gherkinsalad/executionplan/PrepareFromExecutionPlan.groovy">
+								  <classpath refid="maven.compile.classpath" />
+								</groovy>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>cuke4duke</groupId>
 				<artifactId>cuke4duke-maven-plugin</artifactId>
@@ -130,6 +197,7 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8.1</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
@@ -156,6 +224,17 @@
 			<artifactId>selenium-ie-driver</artifactId>
 			<version>${selenium.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.8.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>1.8.1</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>
@@ -174,8 +253,8 @@
 			<url>http://cukes.info/maven</url>
 		</pluginRepository>
 		<pluginRepository>
-        	<id>daveayan-releases</id>
-        	<url>https://github.com/daveayan/_mavenrepository/raw/master/releases</url>
-    	</pluginRepository>
+			<id>daveayan-releases</id>
+			<url>https://github.com/daveayan/_mavenrepository/raw/master/releases</url>
+		</pluginRepository>
 	</pluginRepositories>
 </project>
