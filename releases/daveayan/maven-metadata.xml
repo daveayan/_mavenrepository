@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <plugins>
+    <plugin>
+      <name>gherkin-salad-mojo</name>
+      <prefix>gherkin-salad-mojo</prefix>
+      <artifactId>gherkin-salad-mojo</artifactId>
+    </plugin>
+  </plugins>
+</metadata>
